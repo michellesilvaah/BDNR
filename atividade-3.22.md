@@ -2,7 +2,7 @@
 
 Banco: `aula3_atividade` (MongoDB / mongosh)
 
-## Parte 1: preparação da base
+## 1: preparação da base
 
 ```javascript
 use aula3_atividade
@@ -94,7 +94,7 @@ db.chamados.getIndexes()
 [ { v: 2, key: { _id: 1 }, name: '_id_' } ]
 ```
 
-## Parte 2: consultas
+## 2: consultas
 
 C1, busca rápida por protocolo:
 
@@ -138,9 +138,7 @@ C7, arquivo:
 db.chamados.find({ status: "fechado" })
 ```
 
-## Parte 3: medição sem índices
-
-Script de medição. Para cada consulta ele mostra o plano, `nReturned`, `totalDocsExamined` e o tempo médio de 3 execuções.
+## 3: medição sem índices
 
 ```javascript
 const consultas = {
@@ -192,8 +190,6 @@ function medirEscrita() {
 }
 ```
 
-Medição executada com a coleção apenas com o índice do `_id`:
-
 ```javascript
 Object.keys(consultas).forEach(medir)
 ```
@@ -216,7 +212,7 @@ medirEscrita()
 Inserir 10.000 chamados: 248 ms
 ```
 
-## Parte 4: índices
+## 4: índices
 
 ```javascript
 db.chamados.createIndex({ protocolo: 1 }, { unique: true })
@@ -254,9 +250,7 @@ db.chamados.createIndex({ "cliente.estado": 1, tags: 1 })
 
 C6: um filtro de igualdade no estado e outro em um elemento do array `tags`. O índice composto (multikey, por causa de `tags`) atende os dois filtros.
 
-## Parte 5: medição com índices
-
-Depois de criar os índices de C1 a C6:
+## 5: medição com índices
 
 ```javascript
 Object.keys(consultas).forEach(medir)
@@ -280,8 +274,6 @@ medirEscrita()
 Inserir 10.000 chamados: 544 ms
 ```
 
-Observação: nenhum índice foi criado para C7 nesta etapa, mas o plano de C7 já aparece com `IXSCAN`. Isso acontece porque o índice criado para C4, `{ status: 1, prioridade: 1, abertoEm: -1 }`, começa pelo campo `status`, e o MongoDB pode usá-lo para filtrar só por `status`.
-
 Índice específico para C7:
 
 ```javascript
@@ -296,7 +288,7 @@ medir("C7")
 C7 | plano: FETCH > IXSCAN | nReturned: 59759 | docsExaminados: 59759 | tempoMedioMs: 861.3
 ```
 
-## Parte 6: tabela comparativa
+## 6: tabela comparativa
 
 | Consulta | Índice criado | Plano antes | Plano depois | Docs examinados antes | Docs examinados depois | Tempo antes (ms) | Tempo depois (ms) | nReturned |
 |----------|---------------|-------------|--------------|-----------------------|------------------------|------------------|-------------------|-----------|
