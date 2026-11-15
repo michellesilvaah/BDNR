@@ -6,7 +6,7 @@
 
 Legenda: **Observado** é o que apareceu no ambiente. **Esperado** é o que a teoria prevê. **Impedimento** é uma etapa que não pôde ser executada, registrada sem dados fictícios.
 
-## Parte 1. Diagnóstico e conexão
+## 1. Diagnóstico e conexão
 
 **1. Endereços e papéis**
 
@@ -58,7 +58,7 @@ Conectar apenas abre conexões com três processos `mongod` independentes. A rep
 
 Na conexão ao conjunto (com `replicaSet=rs0`), o cliente descobre todos os membros e acompanha o primary atual. Se o primary mudar, as escritas passam a ir ao novo primary. Na conexão direta, o cliente fala só com aquele processo. Se o primary mudar, a conexão continua no mesmo membro, que pode ter virado secondary e passa a rejeitar escritas.
 
-## Parte 2. Implementar e observar replicação
+## Pt2. Implementar e observar replicação
 
 **4. Dois chamados com confirmação por maioria**
 
@@ -156,7 +156,7 @@ Com `rs.stepDown()`, o primary entrega o papel de forma controlada: o processo c
 
 A experiência não tolera a falha da VPS inteira: os três processos estão na mesma máquina e cairiam juntos.
 
-## Parte 3. Implementar sharding
+## Pt3. Implementar sharding
 
 **Impedimento (itens 9 a 14):** o ambiente de sharding (roteador e lista de dois shards fornecida pelo professor) não foi acessado nesta execução. Não há evidências observadas para esses itens e nenhum dado foi inventado. Seguem apenas os pontos conceituais e o que se espera ver.
 
@@ -176,7 +176,7 @@ O roteador soma o resultado de todos os shards. O total seria o mesmo se todos o
 
 O índice reduz o trabalho local em cada shard (menos documentos examinados), mas não muda o roteamento: a consulta por status continua indo a todos os shards, porque o filtro não contém a chave de distribuição.
 
-## Parte 4. Implementação do grupo
+## Pt4. Implementação do grupo
 
 Função de registro, a ser usada na coleção particionada do grupo:
 
