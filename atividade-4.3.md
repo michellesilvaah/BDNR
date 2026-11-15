@@ -1,6 +1,6 @@
 # 4.3 Replicação e sharding no sistema de chamados
 
-## Parte 1: o que os índices resolveram?
+## 1: o que os índices resolveram?
 
 1. **C1:** de `COLLSCAN` com 300.000 docs examinados (126,0 ms) para `EXPRESS_IXSCAN` com 1 doc (1,3 ms). **C4:** de `SORT > COLLSCAN` com 300.000 docs (141,0 ms) para `LIMIT > FETCH > IXSCAN` com 20 docs (4,7 ms), sem ordenação em memória.
 2. Não. Os índices ficam na mesma máquina dos dados. Se ela cair, tudo fica indisponível.
@@ -15,7 +15,7 @@
 | Distribuir dados além de uma máquina | Sharding | Divide a coleção entre vários shards. |
 | Recuperar chamados apagados | Backup | A replicação propaga a exclusão. |
 
-## Parte 2: disponibilidade
+## 2: disponibilidade
 
 | Situação | Comunicação | Existe maioria? | Efeito sobre as escritas |
 |---|---|---|---|
@@ -30,7 +30,7 @@
 4. Não. Se a máquina cair, os três membros caem juntos.
 5. Cada membro guarda os 300.000 chamados completos. Dividir os dados seria sharding.
 
-## Parte 3: leitura e confirmação
+## 3: leitura e confirmação
 
 1. Não são incompatíveis. A replicação tem atraso: um membro já aplicou a alteração e o outro ainda não.
 2. Não. `w: "majority"` garante que 2 de 3 membros gravaram. O terceiro pode estar atrasado.
@@ -38,7 +38,7 @@
 4. Em C3 o atendente pode ver um chamado já fechado ou não ver um novo. Em C4 um chamado crítico pode demorar a aparecer. Essas telas exigem dados atuais e devem ler do primary.
 5. Só com backup. A exclusão é replicada aos três membros. Também ajudam um membro com atraso configurado ou exclusão lógica.
 
-## Parte 4: distribuição
+## 4: distribuição
 
 | Consulta | Informa a chave? | Shards consultados | Justificativa |
 |---|---|---|---|
@@ -57,7 +57,7 @@
 5. Não. O índice acelera cada shard, mas o filtro não tem a chave, então todos continuam sendo consultados.
 6. Cada shard devolve seus 20 mais recentes. O roteador reúne os resultados, reordena por `abertoEm` e devolve os 20 mais recentes.
 
-## Parte 5: chave de distribuição
+## 5: chave de distribuição
 
 | Chave | Valores distintos | Consultas favorecidas | Risco ou limitação |
 |---|---|---|---|
