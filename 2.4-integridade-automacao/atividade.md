@@ -4,7 +4,7 @@ Banco: `atividade2` (MongoDB / mongosh)
 
 ## Código
 
-### criarPedido (exercícios 1, 2 e 3)
+### criarPedido
 
 ```javascript
 function criarPedido(clienteId, itens) {
@@ -70,7 +70,7 @@ function criarPedido(clienteId, itens) {
 }
 ```
 
-### cancelarPedido (exercícios 3 e 4)
+### cancelarPedido
 
 ```javascript
 function cancelarPedido(pedidoId) {
@@ -101,9 +101,7 @@ function cancelarPedido(pedidoId) {
 }
 ```
 
-## Exercício 1: impedir pedidos com quantidade menor ou igual a zero
-
-A função percorre os itens e recusa o pedido se algum tiver quantidade que não seja número ou seja menor ou igual a zero.
+## 1: impedir pedidos com quantidade menor ou igual a zero
 
 ```javascript
 criarPedido(ObjectId("650000000000000000000101"), [{ produtoId: ObjectId("650000000000000000000201"), quantidade: 0 }])
@@ -127,7 +125,6 @@ Pedido inválido: a quantidade deve ser maior que zero.
 
 ## Exercício 2: impedir pedidos sem itens
 
-A função recusa o pedido se `itens` não for um array ou estiver vazio.
 
 ```javascript
 criarPedido(ObjectId("650000000000000000000101"), [])
@@ -139,9 +136,7 @@ Resultado:
 Pedido inválido: é necessário informar ao menos um item.
 ```
 
-## Exercício 3: campo `cancelado` e simulação de cancelamento
-
-Todo pedido novo é gravado com `cancelado: false`. A função `cancelarPedido` muda o campo para `true`, altera o `status` para `"cancelado"` e registra `canceladoEm`.
+## 3: campo `cancelado` e simulação de cancelamento
 
 Pedido válido criado antes do cancelamento (2 teclados e 1 mouse):
 
@@ -168,7 +163,7 @@ cancelarPedido(pedido._id)
 Resultado:
 
 ```
-(COLE AQUI a mensagem que apareceu após cancelarPedido)
+Pedido cancelado e estoque devolvido.
 ```
 
 Pedido após o cancelamento:
@@ -180,12 +175,31 @@ db.pedidos.find()
 Resultado:
 
 ```
-(COLE AQUI o resultado do db.pedidos.find())
+_id: ObjectId('6afa1919108a5fff085c56ca'),
+  clienteId: ObjectId('650000000000000000000101'),
+  data: ISODate('2026-11-15T20:42:01.037Z'),
+  status: 'cancelado',
+  cancelado: true,
+  itens: [
+    {
+      produtoId: ObjectId('650000000000000000000201'),
+      nome: 'Teclado',
+      quantidade: 2,
+      precoUnitario: 120
+    },
+    {
+      produtoId: ObjectId('650000000000000000000202'),
+      nome: 'Mouse',
+      quantidade: 1,
+      precoUnitario: 60
+    }
+  ],
+  valorTotal: 300,
+  canceladoEm: ISODate('2026-11-15T20:45:06.344Z')
+}
 ```
 
-## Exercício 4: devolver a quantidade ao estoque ao cancelar
-
-O `cancelarPedido` percorre os itens do pedido e devolve cada quantidade ao produto com `$inc`. O `updateOne` do cancelamento só atua em pedidos ainda não cancelados (`cancelado: { $ne: true }`), o que evita devolver o estoque duas vezes.
+## 4: devolver a quantidade ao estoque ao cancelar
 
 Estoque depois da venda e antes do cancelamento:
 
@@ -214,12 +228,11 @@ cancelarPedido(pedido._id)
 Resultado:
 
 ```
-(COLE AQUI a mensagem que apareceu na segunda tentativa de cancelar)
+Pedido já estava cancelado.
 ```
 
-## Exercício 5: total vendido por produto
+## 5: total vendido por produto
 
-A consulta ignora pedidos cancelados, separa os itens com `$unwind` e agrupa por produto somando a quantidade e o valor (`quantidade × precoUnitario`). Foi executada antes do cancelamento.
 
 ```javascript
 db.pedidos.aggregate([
